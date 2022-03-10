@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome to my ouebsaïte</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Comforter+Brush&family=Hubballi&display=swap');
+        </style>
+    <style type="text/css">
+        .alert{
+            color: red;
+        }
+        .form-add-item{
+            display:none;
+        }
+    </style>
+
+  </head>
+  <body>
+    <div id="mon-div">Hello World</div>  
+
+    <ul id="fruits">
+        <li>Pomme</li>
+    </ul>
+    <section class="se1">4</section>
+
+    <main>
+        <section>1</section><section>2</section><section class="se1">3</section>
+        <section class="se1">4</section>
+        <section>5</section>
+        <section id="seMain">6</section>
+        <section>7</section>
+        <section>8</section>
+    </main>   
+    <button onclick="populateArray()">Populate table please</button>
+    <button onclick="toggleFormAddItem()">Add</button>
+
+    <table id="eleves-list">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prenom</th>
+                <th>Age</th>
+                <th>Action</th>
+
+            </tr>
+        </thead>
+        <tbody>
+           
+        </tbody>
+    </table>
+
+    <form class="form-add-item" onsubmit="submitForm(event)">
+        <input type="text" name="nom">
+        <input type="text" name="prenom">
+        <input type="number" name="age">
+        <input type="hidden" name="id" value="-1">
+        <button type="submit">OK</button>
+        <a onclick="toggleFormAddItem()" href="#">Close</a>
+    </form>
+
+
+  </body>
+    <script type="application/javascript">
+
+       let eleves = [
+            {
+                firstName: 'Thomas',
+                lastName: 'Lhomme',
+                age: 36,
+                color: 'green'
+            },
+            {
+                firstName: 'Franck',
+                lastName: 'Zappa',
+                age: 45,
+                color: 'orange'
+            },
+            {
+                firstName: 'Jimi',
+                lastName: 'Hendrix',
+                age: 30,
+                color: 'green'
+            },
+           
+        ]
+        function submitForm(event){
+            event.preventDefault()
+
+            const eleve = {
+                firstName:  document.querySelector('input[name="prenom"]').value,
+                lastName:  document.querySelector('input[name="nom"]').value,
+                age:  document.querySelector('input[name="age"]').value,
+                color: 'green'
+            }
+
+            const id = document.querySelector('input[name="id"]').value
+            if(id == -1){
+                eleves.push(eleve)
+            }else{
+                eleve.color = eleves[id].color;
+                eleves[id] = eleve
+            }
+            
+            populateArray()
+            toggleFormAddItem()
+            document.querySelector('.form-add-item').reset();
+        }
+
+        function toggleFormAddItem(){
+            const state = document.querySelector('.form-add-item').style.display
+            document.querySelector('.form-add-item').style.display = state == 'block' ? 'none' : 'block';
+        }
+        let d = document
+            
+        function populateArray(){
+            tbody = d .querySelector('#eleves-list tbody') 
+            tbody.innerHTML = ''
+            for(const e of eleves){
+                const tr = d .createElement('tr')
+                tr.style.backgroundColor = e.color
+
+                for(const index of Object.keys(e)){
+                    const td = d .createElement('td')
+                    td.appendChild(d.createTextNode(e[index]))
+                    tr.appendChild(td)
+                }
+        
+                const td = d .createElement('td')
+                const buttonDel = createDeleteButton();
+                const buttonUpdate = createUpdateButton();
+                td.append(buttonDel);
+                td.append(buttonUpdate);
+                tr.append(td)
+                tbody.appendChild(tr)
+            }
+
+        }
+        function deleteItem(index){
+            eleves.splice(index, 1);
+             populateArray();
+        }
+        function createDeleteButton(){
+            const button = d.createElement("button")
+            button.innerText = 'Delete'
+            button.onclick = function(){
+                deleteItem(this.parentNode.parentNode.rowIndex - 1);
+            }
+            return button;
+        }
+        function createUpdateButton(){
+            const button = d.createElement("button")
+            button.innerText = 'Update'
+            button.onclick = function(){
+               const index = this.parentNode.parentNode.rowIndex - 1
+               const eleve = eleves[index];
+               populateAddForm(eleve, index)
+               document.querySelector('.form-add-item').style.display = 'block';
+            }
+            return button;
+        }
+
+        function populateAddForm(eleve, id = -1){
+            document.querySelector('input[name="prenom"]').value = eleve.firstName
+            document.querySelector('input[name="nom"]').value = eleve.lastName
+            document.querySelector('input[name="age"]').value = eleve.age;
+            document.querySelector('input[name="id"]').value = id;
+        }
+        
+    </script>
+</html>
+<!-- 
+    <ul id="fruits">
+        <li>Pomme</li>
+    </ul>
+
+    En JS, ajouter dans la liste au bout de 2 secondes
+        - Poire
+        - Bannane
+-->
